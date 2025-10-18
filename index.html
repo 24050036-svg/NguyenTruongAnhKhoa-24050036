@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Portfolio • Nguyễn Trương Anh Khoa — PRO (Final)</title>
+<link rel="icon" href="iconkhoa.jpg" type="image/jpg">
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --neon: #00ff6a;
+    --accent2: #7b61ff;
+    --accent3: #ff4ea1;
+    --text-light: #eef6fb;
+    --panel-bg: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  }
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;}
+  body{color:var(--text-light); background:transparent; overflow-x:hidden; -webkit-font-smoothing:antialiased;}
+
+  /* background animation */
+  body::before{
+    content:""; position:fixed; inset:0; z-index:-6;
+    background: linear-gradient(120deg, #04121a 0%, #071a2a 22%, #081428 50%, #0b1a2a 78%, #04121a 100%);
+    background-size: 400% 400%;
+    animation: baseShift 18s linear infinite;
+    filter: saturate(120%) contrast(105%);
+  }
+  @keyframes baseShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+  /* particles & glow */
+  canvas#particles{ position:fixed; inset:0; z-index:-5; pointer-events:none; }
+  .hero-layer{ position:fixed; inset:0; z-index:-4; pointer-events:none;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(0,255,106,0.06), transparent 6%),
+      radial-gradient(circle at 80% 70%, rgba(123,97,255,0.04), transparent 8%),
+      radial-gradient(circle at 60% 20%, rgba(255,78,161,0.03), transparent 4%);
+    mix-blend-mode: screen; filter: blur(36px) contrast(120%); animation: drift 24s linear infinite;
+  }
+  @keyframes drift{0%{transform:translateY(0)}50%{transform:translateY(-20px)}100%{transform:translateY(0)}}
+
+  /* NAV */
+  nav.main-nav{ position:fixed; top:0; left:0; right:0; z-index:9999;
+    background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.12));
+    backdrop-filter: blur(6px); border-bottom:1px solid rgba(255,255,255,0.02); }
+  .navbar-brand{ color:var(--neon); font-weight:800; letter-spacing:1px; }
+  .nav-link{ color:rgba(255,255,255,0.92); font-weight:600; }
+  .nav-link:hover{ color:var(--neon); transform:translateY(-3px); }
+
+  /* HERO */
+  header.hero{ min-height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; padding:120px 18px 80px; position:relative; overflow:hidden; }
+  .hero-inner{ position:relative; z-index:3; max-width:1100px; width:100%; }
+  .avatar-wrap{ display:inline-block; border-radius:999px; padding:8px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); }
+  .avatar{ width:220px; height:220px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,0.06);
+    box-shadow: 0 30px 90px rgba(0,0,0,0.6); transition: transform .5s cubic-bezier(.2,.9,.3,1), box-shadow .45s; }
+  .avatar:hover{ transform: translateY(-6px) scale(1.04); box-shadow: 0 46px 140px rgba(0,255,106,0.14); }
+  h1.hero-title{ margin:18px 0 6px; font-size:clamp(28px,4.6vw,52px); line-height:1; color:var(--text-light); font-weight:900; }
+  .neon{ color:var(--neon); text-shadow: 0 0 8px rgba(0,255,106,0.9), 0 0 18px rgba(0,255,106,0.45), 0 10px 40px rgba(0,255,106,0.06); }
+  p.lead{ color: rgba(238,246,251,0.92); font-size:1.05rem; max-width:780px; margin:10px auto 0; text-shadow: 0 6px 20px rgba(0,0,0,0.45); }
+
+  .hero-ctas{ margin-top:22px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  .btn-ghost{ padding:12px 28px; border-radius:999px; border:none; font-weight:800; background:linear-gradient(90deg,#fff,#f7f7f7); color:#001; box-shadow: 0 18px 60px rgba(2,6,14,0.6); }
+  .btn-outline{ padding:10px 22px; border-radius:999px; border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.95); }
+
+  /* main panels */
+  main{ position:relative; z-index:2; margin-top:20px; }
+  .panel{ border-radius:14px; padding:22px; margin-bottom:28px; background:var(--panel-bg); border:1px solid rgba(255,255,255,0.03); box-shadow: 0 20px 60px rgba(4,7,12,0.6); transition: transform .35s; }
+
+  .section-title{ display:inline-block; font-weight:800; font-size:20px; color:var(--neon); padding-left:12px; border-left:4px solid rgba(0,255,106,0.14); }
+  .section-sub{ color: rgba(255,255,255,0.85); margin-top:8px; }
+
+  /* Experience / Certificates (new cards) */
+  .exp-card, .cert-card {
+    background: rgba(255,255,255,0.02);
+    padding:18px; border-radius:12px; border:1px solid rgba(255,255,255,0.03);
+    transition: transform .35s, box-shadow .35s;
+  }
+  .exp-card:hover, .cert-card:hover { transform: translateY(-8px); box-shadow: 0 30px 80px rgba(0,255,106,0.06); }
+  .exp-icon { font-size:28px; color:var(--neon); display:inline-block; width:46px; height:46px; border-radius:10px; text-align:center; line-height:46px; margin-bottom:12px; }
+
+  /* reveal util */
+  .reveal{ opacity:0; transform: translateY(26px) scale(.98); transition: all .8s cubic-bezier(.18,.9,.32,1); will-change: transform,opacity; }
+  .reveal.visible{ opacity:1; transform: translateY(0) scale(1); }
+
+  /* responsive tweaks */
+  @media (max-width: 768px) {
+    .avatar{ width:150px; height:150px; }
+    header.hero { padding-top:90px; padding-bottom:50px; }
+  }
+</style>
+</head>
+
+<body>
+
+  <!-- particles and glow -->
+  <canvas id="particles"></canvas>
+  <div class="hero-layer" aria-hidden="true"></div>
+
+  <!-- NAV -->
+  <nav class="main-nav navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">Portfolio-Nguyễn Trương Anh Khoa</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item"><a class="nav-link" href="#about">Giới thiệu</a></li>
+          <li class="nav-item"><a class="nav-link" href="#skills">Kỹ năng</a></li>
+          <li class="nav-item"><a class="nav-link" href="#education">Học vấn</a></li>
+          <li class="nav-item"><a class="nav-link" href="#experience">Dự án</a></li>
+          
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero" id="home">
+    <div class="hero-inner">
+      <div class="avatar-wrap mb-3 reveal">
+        <img src="avatarkhoa.jpg" alt="Nguyen Truong Anh Khoa" class="avatar" />
+      </div>
+
+      <h1 class="hero-title reveal"><span class="neon">Nguyễn Trương Anh Khoa</span></h1>
+      <p class="lead reveal" id="leadText" aria-live="polite"></p>
+
+      <div class="hero-ctas reveal">
+        <a class="btn btn-ghost" href="#experience">Xem dự án</a>
+        <a class="btn btn-outline" href="#contact">Gửi tin nhắn</a>
+      </div>
+
+      <div class="quote reveal" style="max-width:700px;margin:18px auto 0;">
+        "Code không chỉ là logic — đó là cách tôi kể câu chuyện bằng trải nghiệm người dùng."
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ABOUT -->
+    <section id="about" class="reveal">
+      <div class="panel">
+        <div class="row align-items-center g-4">
+          <div class="col-md-5 about-img">
+            <img src="khoa.jpg" alt="about image" class="img-fluid rounded-3">
+          </div>
+          <div class="col-md-7">
+            <div class="section-title">Giới thiệu</div>
+            <div class="section-sub">Frontend Developer • Sinh viên năm 2</div>
+
+            <ul class="meta-list" style="margin-top:14px; list-style:none; padding-left:0;">
+              <li><strong>Tên:</strong> Nguyễn Trương Anh Khoa</li>
+              <li><strong>Ngày sinh:</strong> 12/03/2006</li>
+              <li><strong>Quê quán:</strong> Bình Dương</li>
+              <li><strong>Trường:</strong> Trường Đại học Bình Dương — Ngành Công nghệ thông tin (Năm 2)</li>
+              <li><strong>Email:</strong> <a href="mailto:akhoaaaa1@gmail.com" style="color:var(--neon)">akhoaaaa1@gmail.com</a></li>
+            </ul>
+
+            <p style="margin-top:12px;color:rgba(255,255,255,0.9);">
+              Mình đam mê phát triển giao diện tương tác, tối ưu trải nghiệm người dùng và xây dựng sản phẩm nhỏ có giá trị. Thường làm dự án cá nhân, tham gia hackathon và học về React, Tailwind, GSAP để hoàn thiện kỹ năng UI/UX & animation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="reveal">
+      <div class="panel">
+        <div class="text-center mb-3">
+          <div class="section-title">Kỹ năng</div>
+          <div class="section-sub">Kỹ năng chính & công cụ</div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="skill-label">HTML / CSS <span style="float:right;color:var(--neon)">80%</span></div>
+            <div class="bar-bg mb-3"><div class="bar-fill" data-p="80%"></div></div>
+
+            <div class="skill-label">ReactJS <span style="float:right;color:var(--neon)">72%</span></div>
+            <div class="bar-bg mb-3"><div class="bar-fill" data-p="72%"></div></div>
+
+            <div class="skill-label">UI/UX & Figma <span style="float:right;color:var(--neon)">70%</span></div>
+            <div class="bar-bg mb-3"><div class="bar-fill" data-p="70%"></div></div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="skill-label">C++ <span style="float:right;color:var(--neon)">68%</span></div>
+            <div class="bar-bg mb-3"><div class="bar-fill" data-p="68%"></div></div>
+
+            <div class="skill-label">Git • VSCode <span style="float:right;color:var(--neon)">82%</span></div>
+            <div class="bar-bg mb-3"><div class="bar-fill" data-p="82%"></div></div>
+
+            
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="education" class="reveal">
+      <div class="panel">
+        <div class="section-title">Học vấn</div>
+        <div class="section-sub">Thông tin học tập</div>
+
+        <div class="row mt-3 g-3">
+          <div class="col-md-6">
+            <div class="edu-item p-3">
+              <strong>Đại học Bình Dương</strong>
+              <div style="color:rgba(255,255,255,0.85)">Công nghệ thông tin — Bằng cử nhân (Đang học, 2024 — nay)</div>
+              <div style="margin-top:8px;color:rgba(255,255,255,0.8)">Học: Lập trình Web, Cấu trúc dữ liệu, CSDL, Mạng máy tính. Thực hành dự án nhóm & cá nhân.</div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="edu-item p-3">
+              <strong>Khóa học & tự học</strong>
+              <div style="color:rgba(255,255,255,0.85);margin-top:6px">React cơ bản, Thiết kế UI/UX, JavaScript nâng cao (tài liệu & dự án).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+   <section id="experience" class="reveal">
+  <div class="panel">
+    <div class="section-title">Dự Án</div>
+    <div class="section-sub">Một vài hoạt động</div>
+
+    <div class="row mt-3 g-4">
+      <div class="col-12 col-md-6">
+        <div class="exp-card p-3 bg-dark text-white rounded">
+          <div class="d-flex align-items-start gap-3">
+            <div class="exp-icon text-warning fs-4">
+              <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <div>
+              <h5 class="mb-1">
+                <a href="https://akhoaaaa1-ai.github.io/NhomTuDo/" 
+                   target="_blank" 
+                   class="text-info fw-bold text-decoration-none">
+                  Website đánh giá sách
+                </a>
+              </h5>
+              <small class="text-secondary">2025</small>
+              <p class="mt-2 mb-0 text-light">
+                Thiết kế & triển khai website đánh giá sách bằng HTML, CSS, JS (Bootstrap).  
+                Giao diện responsive, tối ưu UX/UI, triển khai GitHub Pages.
+              </p>
+        <a href="https://akhoaaaa1-ai.github.io/NhomTuDo/" target="_blank" class="btn btn-outline-light btn-sm">Xem</a>
+      </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+    
+
+   
+
+        <div class="col-md-6">
+          <div class="project-card p-4" role="button" tabindex="0" data-title="Skincare Booking (Demo)" data-desc="Demo booking hệ thống cho spa: UI, form đặt lịch, validate, confirm (mẫu)." onclick="openProjectModal(this)">
+            
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="reveal">
+      <div class="panel text-center">
+        <div class="section-title">Liên hệ</div>
+        <div class="section-sub">Gửi tin nhắn — mình sẽ phản hồi sớm</div>
+
+        <form id="contactForm" class="mx-auto mt-4" style="max-width:760px" onsubmit="handleContact(event)">
+          <div class="row g-3">
+            <div class="col-md-6"><input class="form-control" id="name" placeholder="Họ và tên" required></div>
+            <div class="col-md-6"><input class="form-control" id="email" type="email" placeholder="Email" required></div>
+            <div class="col-12"><textarea class="form-control" id="message" rows="5" placeholder="Nội dung..." required></textarea></div>
+            <div class="col-12 text-center">
+              <button class="btn-send" type="submit"><i class="fa-solid fa-paper-plane me-2"></i>Gửi tin nhắn</button>
+            </div>
+          </div>
+        </form>
+
+        <div class="mt-4">
+          <a class="me-3" href="https://github.com/akhoaaaa1-ai" target="_blank" style="color:var(--neon);"><i class="fab fa-github fa-lg"></i></a>
+          <a class="me-3" href="https://www.facebook.com/?locale=vi_VN" target="_blank" style="color:var(--neon)"><i class="fab fa-facebook fa-lg"></i></a>
+          <a class="me-3" href="mailto:akhoaaaa1@gmail.com" style="color:var(--neon)"><i class="fa-solid fa-envelope fa-lg"></i></a>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>© 2025 • Nguyễn Trương Anh Khoa — All rights reserved.</footer>
+
+  <!-- Project Modal -->
+  <div class="modal fade" id="projectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content" style="background:linear-gradient(180deg, rgba(6,8,12,0.95), rgba(3,6,10,0.98)); color:var(--text-light); border:none;">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="projectModalLabel"></h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="projectModalBody"></div>
+        <div class="modal-footer border-0">
+          <a id="projectModalCode" href="#" class="btn btn-outline-light" target="_blank">Xem mã nguồn</a>
+          <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* TYPING EFFECT */
+const phrases = [
+  "Frontend Developer • Creative UI",
+  "Sinh viên CNTT năm 2 • Học & thực hành mỗi ngày",
+  "React • HTML • CSS • JavaScript"
+];
+const lead = document.getElementById('leadText');
+let pIndex = 0, cIndex = 0, deleting = false;
+function tick() {
+  const txt = phrases[pIndex];
+  if(!deleting){
+    lead.textContent = txt.slice(0, ++cIndex);
+    if(cIndex === txt.length){ deleting=true; setTimeout(tick, 900); return; }
+  } else {
+    lead.textContent = txt.slice(0, --cIndex);
+    if(cIndex === 0){ deleting=false; pIndex=(pIndex+1)%phrases.length; setTimeout(tick, 300); return; }
+  }
+  setTimeout(tick, deleting?30:40);
+}
+tick();
+
+/* REVEAL ON SCROLL */
+const revs = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+  });
+},{threshold:0.16});
+revs.forEach(r=>io.observe(r));
+
+/* SKILL BARS */
+const skillsSection = document.getElementById('skills');
+const skillObserver = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.querySelectorAll('.bar-fill').forEach(el=>{
+        const p = el.getAttribute('data-p') || '60%';
+        el.style.width = p;
+      });
+      skillObserver.unobserve(entry.target);
+    }
+  });
+},{threshold:0.24});
+if(skillsSection) skillObserver.observe(skillsSection);
+
+/* PARTICLES CANVAS */
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W = canvas.width = innerWidth, H = canvas.height = innerHeight;
+window.addEventListener('resize', ()=>{ W = canvas.width = innerWidth; H = canvas.height = innerHeight; init(); });
+let parts = [];
+function rand(min,max){ return Math.random()*(max-min)+min; }
+function init(){
+  parts = [];
+  const count = Math.floor(Math.min(140, Math.max(40, (W*H)/90000 )));
+  for(let i=0;i<count;i++){
+    parts.push({
+      x:rand(0,W), y:rand(0,H),
+      r:rand(0.6,3.6),
+      vx:rand(-0.24,0.24), vy:rand(-0.14,0.14),
+      hue: [140,200,320][Math.floor(Math.random()*3)],
+      a: rand(0.06,0.28), tw: rand(0.002,0.014)
+    });
+  }
+}
+init();
+let T=0;
+let rafId;
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  for(let p of parts){
+    p.x += p.vx + Math.sin(T*p.tw)*0.2;
+    p.y += p.vy + Math.cos(T*p.tw)*0.12;
+    if(p.x < -20) p.x = W + 20; if(p.x > W+20) p.x = -20;
+    if(p.y < -20) p.y = H + 20; if(p.y > H+20) p.y = -20;
+    const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*12);
+    g.addColorStop(0, `hsla(${p.hue},100%,70%,${p.a})`);
+    g.addColorStop(0.4, `hsla(${p.hue},100%,60%,${p.a*0.36})`);
+    g.addColorStop(1, `hsla(${p.hue},100%,60%,0)`);
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r*12,0,Math.PI*2);
+    ctx.fill();
+  }
+  T += 0.5;
+  rafId = requestAnimationFrame(draw);
+}
+draw();
+
+/* PARALLAX */
+window.addEventListener('scroll', ()=>{
+  const sc = window.scrollY;
+  const heroLayer = document.querySelector('.hero-layer');
+  if(heroLayer) heroLayer.style.transform = `translateY(${sc * -0.03}px)`;
+  const avatar = document.querySelector('.avatar');
+  if(avatar) avatar.style.transform = `translateY(${Math.min(0, -sc * 0.02)} )`;
+});
+
+/* PROJECT MODAL */
+function openProjectModal(el){
+  const title = el.getAttribute('data-title') || 'Project';
+  const desc = el.getAttribute('data-desc') || '';
+  document.getElementById('projectModalLabel').textContent = title;
+  document.getElementById('projectModalBody').innerHTML = `<p style="color:rgba(255,255,255,0.95)">${desc}</p>
+    <p style="color:rgba(255,255,255,0.85)"><strong>Tech:</strong> HTML, CSS, JS</p>`;
+  document.getElementById('projectModalCode').href = '#';
+  const modalEl = document.getElementById('projectModal');
+  const modal = new bootstrap.Modal(modalEl);
+  modal.show();
+}
+
+/* CONTACT FORM (demo) */
+function handleContact(e){
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+  if(!name||!email||!message){ alert('Vui lòng điền đầy đủ thông tin.'); return; }
+  const btn = e.submitter;
+  btn.disabled = true; const old = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Đang gửi...';
+  setTimeout(()=>{ btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã gửi'; setTimeout(()=>{ btn.disabled=false; btn.innerHTML = old; },1500); }, 1000);
+  // TODO: integrate EmailJS or backend
+}
+
+
+/* RESPECT REDUCED MOTION */
+if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  cancelAnimationFrame(rafId);
+  document.getElementById('particles').style.display='none';
+  document.querySelectorAll('.avatar, .project-card, .panel').forEach(el=> el.style.transition='none');
+}
+
+/* INITIAL REVEAL SEQUENCE */
+window.addEventListener('load', ()=>{
+  document.querySelectorAll('.reveal').forEach((el,i)=>{
+    setTimeout(()=> el.classList.add('visible'), 120 + i*90);
+  });
+});
+</script>
+</body>
+</html>
